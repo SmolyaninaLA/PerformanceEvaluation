@@ -11,8 +11,7 @@ namespace PerformanceEvaluation
         {
             List<string> textList = new List<string>();
 
-            //LinkedList<string> testLinked = new LinkedList<string>();
-
+            
             string pathText = @"C:\TaskDir\Text1.txt";
 
             char[] delimiterChars = { ' ', ',', '.', ':', '\r', '\n', '«', '»','?','(',')','!',';','-' };
