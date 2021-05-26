@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 
 namespace PerformanceEvaluation
 {
@@ -19,20 +20,25 @@ namespace PerformanceEvaluation
             using (StreamReader sr = new StreamReader(pathText))
             {
                 var text = sr.ReadToEnd();
-                var words = text.Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries);
 
-                var watchList = Stopwatch.StartNew();
+                var noPunctuationText = new string(text.Where(c => !char.IsPunctuation(c)).ToArray());
+
+                var words = noPunctuationText.Split(delimiterChars, StringSplitOptions.RemoveEmptyEntries);
+
                 textList.AddRange(words);
-                watchList.Stop();
-
-                var wathLinkedlist = Stopwatch.StartNew();
-                LinkedList<string> testLinked = new LinkedList<string>(words);
-                wathLinkedlist.Stop();
-
                
-                Console.WriteLine("время производительности List: {0}  LinkedList: {1}", watchList.Elapsed.TotalMilliseconds,wathLinkedlist.Elapsed.TotalMilliseconds);
+                var selectWords = textList.GroupBy(w => w)
+                                          .Select(w => new {wText = w.Key, cRepeat = w.Count()} );
 
-               
+                var SortWords = selectWords.OrderByDescending(s => s.cRepeat);
+
+                var result = SortWords.Take(10);
+
+                foreach ( var word in result)
+                {
+                    Console.WriteLine("Слово '{0}', количество повторов = {1} ", word.wText, word.cRepeat);
+                }
+                
                 sr.Close();
             }
             
